@@ -440,24 +440,26 @@ const drawPlanPage = (doc, featureMeta, formData, pageNumber, totalPages, docId)
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9.5);
   doc.setTextColor(...COLORS.accent);
-  doc.text(`PLANNED FINANCIAL VALUE: ${valueLabel}`, 26, valueCardY + 14);
+  doc.text(`PLANNED FINANCIAL VALUE: ${valueLabel}`, 26, valueCardY + 13);
 
+  // Large Bold Amount
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(24);
+  doc.setFontSize(22);
   doc.setTextColor(...COLORS.white);
-  doc.text(formattedVal, 26, valueCardY + 30);
+  doc.text(formattedVal, 26, valueCardY + 26);
 
+  // Words representation placed clearly on its own line below the number (eliminates any horizontal overlap)
   if (wordsVal) {
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-    doc.setTextColor(215, 230, 255);
-    doc.text(wordsVal, 28 + doc.getTextWidth(formattedVal) + 5, valueCardY + 29.5);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10.5);
+    doc.setTextColor(...COLORS.accent);
+    doc.text(wordsVal, 26, valueCardY + 36);
   }
 
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
+  doc.setFontSize(7.5);
   doc.setTextColor(180, 205, 240);
-  doc.text('Authorized in-browser planning record compiled for Eswara Moorthy Insurance client proposal.', 26, valueCardY + 39);
+  doc.text('Calculated client proposal record • Eswara Moorthy Insurance Advisory', pageWidth - 26, valueCardY + 36, { align: 'right' });
 
   // 6. Page Footer
   drawPageFooter(doc, pageNumber, totalPages);
