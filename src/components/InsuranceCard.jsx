@@ -130,21 +130,15 @@ export default function InsuranceCard({
         {/* Navy gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-brand-primary via-brand-primary/40 to-transparent" />
 
-        {/* Top Badges: Selection state & Category Tag */}
-        <div className="absolute top-3 left-3 right-3 flex justify-between items-center z-10">
-          <span className="px-3 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase bg-brand-primary/85 text-brand-accent backdrop-blur-md border border-brand-accent/30 shadow-sm flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
-            {meta.tagline}
-          </span>
-
-          {/* Interactive Checkbox Button */}
+        {/* Top Action: Selection state */}
+        <div className="absolute top-3 right-3 z-10">
           <button
             type="button"
             onClick={() => onToggleSelect(meta.id)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all backdrop-blur-md ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all backdrop-blur-md ${
               isSelected
                 ? 'bg-brand-secondary text-white shadow-md ring-2 ring-white/30'
-                : 'bg-white/80 text-brand-navy hover:bg-white border border-slate-200'
+                : 'bg-white/85 text-brand-navy hover:bg-white border border-slate-200'
             }`}
           >
             <CheckCircle2 className={`w-3.5 h-3.5 ${isSelected ? 'text-brand-accent' : 'text-slate-400'}`} />

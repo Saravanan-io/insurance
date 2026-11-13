@@ -296,23 +296,18 @@ const drawPlanPage = (doc, featureMeta, formData, pageNumber, totalPages, docId)
   // Standard Header
   drawPageHeader(doc, featureMeta.reportTitle, docId);
 
-  // Top Section: Category Title + Tagline
-  const contentStartY = 32;
+  // Top Section: Category Title
+  const contentStartY = 33;
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(16);
   doc.setTextColor(...COLORS.primary);
   doc.text(featureMeta.reportTitle, 15, contentStartY);
 
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(...COLORS.secondary);
-  doc.text(`PLANNING CLASSIFICATION: ${featureMeta.tagline.toUpperCase()}`, 15, contentStartY + 6);
-
   // Two Column Layout Top Area:
   // Left: Feature Image (Width: 85mm, Height: 58mm)
   // Right: Key Personal Details Box (Width: 90mm, Height: 58mm)
   const imageX = 15;
-  const imageY = contentStartY + 10;
+  const imageY = contentStartY + 8;
   const imageW = 85;
   const imageH = 58;
 
