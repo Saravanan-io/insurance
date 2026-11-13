@@ -17,9 +17,7 @@ export default function Navbar({ selectedCount = 0, onGenerateClick }) {
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'Insurance Plans', href: '#plans' },
-    { name: 'How It Works', href: '#how-it-works' },
-    { name: 'Advisory Features', href: '#features' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Selected Plans', href: '#summary' },
   ];
 
   const handleNavClick = (e, href) => {

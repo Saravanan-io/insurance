@@ -3,10 +3,6 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import InsuranceCard from './components/InsuranceCard';
 import SelectedPlans from './components/SelectedPlans';
-import HowItWorks from './components/HowItWorks';
-import FeaturesSection from './components/FeaturesSection';
-import ContactSection from './components/ContactSection';
-import Footer from './components/Footer';
 import PdfSuccessModal from './components/PdfSuccessModal';
 import { initialPlansState, demoProfiles, insuranceFeaturesMeta } from './data/insuranceData';
 import { Sparkles, Shield, Layers, HelpCircle, CheckCircle } from 'lucide-react';
@@ -144,27 +140,17 @@ export default function App() {
       </main>
 
       {/* Selected Plans & Complete Portfolio Generator */}
-      <SelectedPlans
-        plansState={plansState}
-        onToggleSelect={handleToggleSelect}
-        onSelectAll={handleSelectAll}
-        onClearAll={handleClearAll}
-        onLoadDemo={handleLoadDemo}
-        onSetFormErrors={handleSetFormErrors}
-        onPdfSuccess={(info) => setDownloadSuccess(info)}
-      />
-
-      {/* How It Works Section */}
-      <HowItWorks />
-
-      {/* Features & Institutional Quality Section */}
-      <FeaturesSection />
-
-      {/* Contact & Consultation Section */}
-      <ContactSection />
-
-      {/* Corporate Footer */}
-      <Footer />
+      <div className="pb-16">
+        <SelectedPlans
+          plansState={plansState}
+          onToggleSelect={handleToggleSelect}
+          onSelectAll={handleSelectAll}
+          onClearAll={handleClearAll}
+          onLoadDemo={handleLoadDemo}
+          onSetFormErrors={handleSetFormErrors}
+          onPdfSuccess={(info) => setDownloadSuccess(info)}
+        />
+      </div>
 
       {/* Success Modal upon PDF Generation */}
       <PdfSuccessModal
