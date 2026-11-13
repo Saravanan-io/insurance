@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatCurrencyInWords, formatIndianCurrency } from '../utils/formatters';
-import { User, IndianRupee, Clock, AlertCircle } from 'lucide-react';
+import { User, AlertCircle } from 'lucide-react';
 
 export default function RetirementForm({ data, onChange, errors = {} }) {
   const handleFieldChange = (field, value) => {
@@ -86,40 +86,6 @@ export default function RetirementForm({ data, onChange, errors = {} }) {
         {errors.retirementValue && (
           <p className="flex items-center gap-1 text-xs text-rose-500 mt-1">
             <AlertCircle className="w-3 h-3" /> {errors.retirementValue}
-          </p>
-        )}
-      </div>
-
-      {/* Expected Retirement Age */}
-      <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-1.5">
-          Target Retirement Age <span className="text-rose-500">*</span>
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-            <Clock className="w-4 h-4" />
-          </div>
-          <input
-            type="number"
-            min="45"
-            max="85"
-            placeholder="e.g. 58 or 60"
-            value={data.retirementAge || ''}
-            onChange={(e) => handleFieldChange('retirementAge', e.target.value)}
-            className={`w-full h-11 pl-9 pr-3 bg-slate-50 border rounded-lg text-sm text-brand-text placeholder-slate-400 focus:outline-none focus:ring-2 transition ${
-              errors.retirementAge
-                ? 'border-rose-400 focus:ring-rose-200 bg-rose-50/30'
-                : 'border-slate-200 focus:ring-brand-secondary/40 focus:border-brand-secondary'
-            }`}
-          />
-        </div>
-        {errors.retirementAge ? (
-          <p className="flex items-center gap-1 text-xs text-rose-500 mt-1">
-            <AlertCircle className="w-3 h-3" /> {errors.retirementAge}
-          </p>
-        ) : (
-          <p className="text-[11px] text-slate-500 mt-1">
-            Standard peaceful retirement age is typically 55 to 60 years.
           </p>
         )}
       </div>

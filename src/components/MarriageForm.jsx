@@ -1,10 +1,8 @@
 import React from 'react';
 import { formatCurrencyInWords, formatIndianCurrency } from '../utils/formatters';
-import { User, IndianRupee, Calendar, AlertCircle } from 'lucide-react';
+import { User, AlertCircle } from 'lucide-react';
 
 export default function MarriageForm({ data, onChange, errors = {} }) {
-  const currentYear = new Date().getFullYear();
-
   const handleFieldChange = (field, value) => {
     onChange('marriage', {
       ...data,
@@ -88,42 +86,6 @@ export default function MarriageForm({ data, onChange, errors = {} }) {
         {errors.marriageValue && (
           <p className="flex items-center gap-1 text-xs text-rose-500 mt-1">
             <AlertCircle className="w-3 h-3" /> {errors.marriageValue}
-          </p>
-        )}
-      </div>
-
-      {/* Expected Marriage Year */}
-      <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-brand-muted mb-1.5">
-          Expected Marriage Year <span className="text-rose-500">*</span>
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-            <Calendar className="w-4 h-4" />
-          </div>
-          <input
-            type="number"
-            min={currentYear}
-            max={currentYear + 50}
-            placeholder={`e.g. ${currentYear + 2}`}
-            value={data.marriageYear || ''}
-            onChange={(e) => handleFieldChange('marriageYear', e.target.value)}
-            className={`w-full h-11 pl-9 pr-3 bg-slate-50 border rounded-lg text-sm text-brand-text placeholder-slate-400 focus:outline-none focus:ring-2 transition ${
-              errors.marriageYear
-                ? 'border-rose-400 focus:ring-rose-200 bg-rose-50/30'
-                : 'border-slate-200 focus:ring-brand-secondary/40 focus:border-brand-secondary'
-            }`}
-          />
-        </div>
-        {errors.marriageYear ? (
-          <p className="flex items-center gap-1 text-xs text-rose-500 mt-1">
-            <AlertCircle className="w-3 h-3" /> {errors.marriageYear}
-          </p>
-        ) : (
-          <p className="text-[11px] text-slate-500 mt-1">
-            {data.marriageYear >= currentYear
-              ? `Planning window: ${Number(data.marriageYear) - currentYear} year(s) from today`
-              : 'Enter upcoming target year'}
           </p>
         )}
       </div>

@@ -4,7 +4,6 @@
 
 export const validateMarriage = (data) => {
   const errors = {};
-  const currentYear = new Date().getFullYear();
 
   if (!data.prefix || data.prefix === '') {
     errors.prefix = 'Please select a title prefix (Mr./Mrs.)';
@@ -19,11 +18,6 @@ export const validateMarriage = (data) => {
     errors.marriageValue = 'Please enter a valid planned marriage budget (> 0)';
   }
 
-  const year = Number(data.marriageYear);
-  if (!data.marriageYear || isNaN(year) || year < currentYear || year > currentYear + 50) {
-    errors.marriageYear = `Please enter a valid year between ${currentYear} and ${currentYear + 50}`;
-  }
-
   return {
     isValid: Object.keys(errors).length === 0,
     errors
@@ -32,7 +26,6 @@ export const validateMarriage = (data) => {
 
 export const validateEducation = (data) => {
   const errors = {};
-  const currentYear = new Date().getFullYear();
 
   if (!data.fullName || data.fullName.trim().length < 2) {
     errors.fullName = 'Student Full Name is required';
@@ -45,11 +38,6 @@ export const validateEducation = (data) => {
   const value = Number(data.educationValue);
   if (!data.educationValue || isNaN(value) || value <= 0) {
     errors.educationValue = 'Please enter a valid education target fund (> 0)';
-  }
-
-  const year = Number(data.targetYear);
-  if (!data.targetYear || isNaN(year) || year < currentYear || year > currentYear + 35) {
-    errors.targetYear = `Please enter a valid target year between ${currentYear} and ${currentYear + 35}`;
   }
 
   return {
@@ -74,11 +62,6 @@ export const validateRetirement = (data) => {
     errors.retirementValue = 'Please enter a target retirement corpus (> 0)';
   }
 
-  const age = Number(data.retirementAge);
-  if (!data.retirementAge || isNaN(age) || age < 45 || age > 95) {
-    errors.retirementAge = 'Retirement age must be between 45 and 95';
-  }
-
   return {
     isValid: Object.keys(errors).length === 0,
     errors
@@ -101,10 +84,6 @@ export const validateAccidentalRisk = (data) => {
     errors.coverageValue = 'Please enter an accidental coverage sum (> 0)';
   }
 
-  if (!data.nomineeName || data.nomineeName.trim().length < 2) {
-    errors.nomineeName = 'Nominee Full Name is required';
-  }
-
   return {
     isValid: Object.keys(errors).length === 0,
     errors
@@ -125,10 +104,6 @@ export const validateLifeRisk = (data) => {
   const value = Number(data.coverageValue);
   if (!data.coverageValue || isNaN(value) || value <= 0) {
     errors.coverageValue = 'Please enter a life risk coverage sum (> 0)';
-  }
-
-  if (!data.nomineeName || data.nomineeName.trim().length < 2) {
-    errors.nomineeName = 'Nominee Full Name is required';
   }
 
   return {

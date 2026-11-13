@@ -4,7 +4,6 @@ export const initialPlansState = {
     prefix: 'Mr.',
     fullName: '',
     marriageValue: '',
-    marriageYear: new Date().getFullYear() + 2,
     errors: {}
   },
   education: {
@@ -12,7 +11,6 @@ export const initialPlansState = {
     fullName: '',
     gender: 'Male',
     educationValue: '',
-    targetYear: new Date().getFullYear() + 6,
     errors: {}
   },
   retirement: {
@@ -20,7 +18,6 @@ export const initialPlansState = {
     prefix: 'Mr.',
     fullName: '',
     retirementValue: '',
-    retirementAge: 60,
     errors: {}
   },
   accidentalRisk: {
@@ -28,7 +25,6 @@ export const initialPlansState = {
     prefix: 'Mr.',
     fullName: '',
     coverageValue: '',
-    nomineeName: '',
     errors: {}
   },
   lifeRisk: {
@@ -36,7 +32,6 @@ export const initialPlansState = {
     prefix: 'Mr.',
     fullName: '',
     coverageValue: '',
-    nomineeName: '',
     errors: {}
   }
 };
@@ -48,7 +43,6 @@ export const demoProfiles = {
       prefix: 'Mr.',
       fullName: 'Saravanan Ramanathan',
       marriageValue: '2500000',
-      marriageYear: new Date().getFullYear() + 2,
       errors: {}
     },
     education: {
@@ -56,7 +50,6 @@ export const demoProfiles = {
       fullName: 'Ananya Saravanan',
       gender: 'Female',
       educationValue: '3500000',
-      targetYear: new Date().getFullYear() + 7,
       errors: {}
     },
     retirement: {
@@ -64,7 +57,6 @@ export const demoProfiles = {
       prefix: 'Mr.',
       fullName: 'Saravanan Ramanathan',
       retirementValue: '15000000',
-      retirementAge: 58,
       errors: {}
     },
     accidentalRisk: {
@@ -72,7 +64,6 @@ export const demoProfiles = {
       prefix: 'Mr.',
       fullName: 'Saravanan Ramanathan',
       coverageValue: '5000000',
-      nomineeName: 'Deepa Saravanan (Spouse)',
       errors: {}
     },
     lifeRisk: {
@@ -80,7 +71,6 @@ export const demoProfiles = {
       prefix: 'Mr.',
       fullName: 'Saravanan Ramanathan',
       coverageValue: '10000000',
-      nomineeName: 'Deepa Saravanan (Spouse)',
       errors: {}
     }
   }
@@ -109,7 +99,7 @@ export const insuranceFeaturesMeta = [
     color: '#2457A7',
     badgeClass: 'bg-blue-100 text-blue-900 border-blue-300',
     statLabel: 'Target Fund',
-    planningInsight: 'Education inflation in India averages 10-12% annually. Dedicated educational planning guarantees tuition and overseas living costs regardless of market volatility.'
+    planningInsight: 'Education inflation in India averages 10-12% annually. Dedicated educational planning guarantees tuition and university costs regardless of market volatility.'
   },
   {
     id: 'retirement',

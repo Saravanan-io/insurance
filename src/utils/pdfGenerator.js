@@ -357,41 +357,41 @@ const drawPlanPage = (doc, featureMeta, formData, pageNumber, totalPages, docId)
 
   if (featureMeta.id === 'marriage') {
     detailRows = [
-      { label: 'Beneficiary Name', value: `${formData.prefix} ${formData.fullName}` },
-      { label: 'Expected Marriage Year', value: `${formData.marriageYear} (Target Window)` },
-      { label: 'Planning Horizon', value: `${Math.max(1, Number(formData.marriageYear) - new Date().getFullYear())} Year(s) to Milestone` },
-      { label: 'Product Structure', value: 'Guaranteed Endowment / Growth' },
+      { label: 'Beneficiary Name', value: `${formData.prefix || ''} ${formData.fullName || ''}`.trim() },
+      { label: 'Planning Horizon', value: 'Target Milestone Window' },
+      { label: 'Fund Objective', value: 'Wedding & Ceremonial Celebrations' },
+      { label: 'Product Structure', value: 'Guaranteed Milestone Endowment' },
       { label: 'Tax Exemption Eligibility', value: 'Section 80C & 10(10D) Compliant' }
     ];
   } else if (featureMeta.id === 'education') {
     detailRows = [
-      { label: 'Student Full Name', value: formData.fullName },
+      { label: 'Student Full Name', value: formData.fullName || 'Student' },
       { label: 'Gender Category', value: `${formData.gender} Student` },
-      { label: 'Target Academic Year', value: `${formData.targetYear} (Enrollment)` },
       { label: 'Fund Objective', value: 'Higher Studies & University Corpus' },
+      { label: 'Product Structure', value: 'Dedicated Child Education Shield' },
       { label: 'Inflation Protection', value: 'Calculated with 10% Edu-Inflation' }
     ];
   } else if (featureMeta.id === 'retirement') {
     detailRows = [
-      { label: 'Retiree Name', value: `${formData.prefix} ${formData.fullName}` },
-      { label: 'Desired Retirement Age', value: `${formData.retirementAge} Years of Age` },
+      { label: 'Retiree Name', value: `${formData.prefix || ''} ${formData.fullName || ''}`.trim() },
+      { label: 'Planning Objective', value: 'Financial Independence & Pension' },
       { label: 'Annuity Cashflow Plan', value: 'Lifetime Monthly Pension Option' },
       { label: 'Corpus Nature', value: 'Capital Preservation & Yield' },
       { label: 'Healthcare Cushion', value: 'Included in Retirement Projection' }
     ];
   } else if (featureMeta.id === 'accidentalRisk') {
     detailRows = [
-      { label: 'Insured Individual', value: `${formData.prefix} ${formData.fullName}` },
-      { label: 'Primary Nominee', value: formData.nomineeName },
+      { label: 'Insured Individual', value: `${formData.prefix || ''} ${formData.fullName || ''}`.trim() },
       { label: 'Coverage Type', value: '24x7 Global Accidental & Disability' },
-      { label: 'Immediate Claim Assistance', value: 'Fast-Track Settlement Guarantee' },
-      { label: 'Hospitalization Cash Support', value: 'Integrated Emergency Rider' }
+      { label: 'Claim Settlement', value: 'Fast-Track Priority Processing' },
+      { label: 'Hospitalization Support', value: 'Integrated Emergency Cash Rider' },
+      { label: 'Income Preservation', value: '100% Payout on Permanent Disability' }
     ];
   } else if (featureMeta.id === 'lifeRisk') {
     detailRows = [
-      { label: 'Life Assured', value: `${formData.prefix} ${formData.fullName}` },
-      { label: 'Designated Nominee', value: formData.nomineeName },
+      { label: 'Life Assured', value: `${formData.prefix || ''} ${formData.fullName || ''}`.trim() },
       { label: 'Coverage Term Plan', value: 'Pure Risk Comprehensive Term Life' },
+      { label: 'Family Protection', value: 'Full Income Replacement & Debt Shield' },
       { label: 'Claim Payout Structure', value: 'Lump Sum + Monthly Family Income' },
       { label: 'Section 80C Benefit', value: 'Annual Premium Tax Rebate' }
     ];
