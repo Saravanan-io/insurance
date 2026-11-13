@@ -116,67 +116,16 @@ export default function Hero({ onExploreClick, onGenerateClick, onLoadDemo }) {
             </div>
           </div>
 
-          {/* Right Column: Hero Visual with Overlays */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative mx-auto max-w-md lg:max-w-none">
-              {/* Outer decorative card */}
+          {/* Right Column: Mr. Eswara Moorthy Portrait */}
+          <div className="lg:col-span-5 relative flex justify-center">
+            <div className="relative mx-auto max-w-sm sm:max-w-md w-full">
+              {/* Clean Executive Portrait Container */}
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 group">
                 <img
                   src={base64Images.hero}
-                  alt="Modern Indian Family Financial Security"
-                  className="w-full h-[420px] sm:h-[480px] object-cover group-hover:scale-102 transition-transform duration-700"
+                  alt="Eswara Moorthy – Senior Insurance Advisor"
+                  className="w-full h-[460px] sm:h-[520px] object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
                 />
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/90 via-brand-primary/20 to-transparent" />
-
-                {/* Bottom Card Overlay */}
-                <div className="absolute bottom-5 left-5 right-5 p-4 rounded-2xl bg-brand-primary/80 backdrop-blur-md border border-brand-accent/30 text-white">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-brand-accent flex items-center gap-1">
-                      <Award className="w-3.5 h-3.5" />
-                      Family Milestone Blueprint
-                    </span>
-                    <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
-                      Verified
-                    </span>
-                  </div>
-                  <h3 className="text-base font-bold text-white">
-                    Eswara Moorthy Insurance Advisory
-                  </h3>
-                  <p className="text-xs text-slate-200 mt-0.5">
-                    Marriage • Education • Retirement • Risk Protection
-                  </p>
-                </div>
-              </div>
-
-              {/* Floating Badge 1: Top Right */}
-              <div className="absolute -top-4 -right-4 sm:top-6 sm:-right-6 bg-white rounded-2xl p-3.5 shadow-xl border border-slate-100 flex items-center gap-3 backdrop-blur-md animate-bounce-subtle">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
-                  <ShieldCheck className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-[10px] uppercase font-bold text-slate-400">
-                    Settlement Ratio
-                  </div>
-                  <div className="text-sm font-extrabold text-brand-primary">
-                    99.4% Claim Record
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Badge 2: Bottom Left */}
-              <div className="hidden sm:flex absolute -bottom-5 -left-6 bg-white rounded-2xl p-3.5 shadow-xl border border-slate-100 items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-brand-lightBlue border border-brand-secondary/30 flex items-center justify-center text-brand-secondary">
-                  <Sparkles className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-[10px] uppercase font-bold text-slate-400">
-                    PDF Generator
-                  </div>
-                  <div className="text-sm font-extrabold text-brand-secondary">
-                    Individual &amp; Portfolio
-                  </div>
-                </div>
               </div>
             </div>
           </div>

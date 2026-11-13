@@ -147,19 +147,57 @@ const drawCoverPage = (doc, selectedPlansList, plansState, docId, totalPages) =>
   doc.setTextColor(...COLORS.textMuted);
   doc.text('Customized Client Portfolio Document • Multi-Milestone Financial Blueprint', 30, 92);
 
-  // Hero Cover Image
+  // Advisor Portrait & Credentials Card
   const heroImg = base64Images.hero;
+  const advisorCardY = 106;
+  const portraitW = 46;
+  const portraitH = 58;
+
   if (heroImg) {
     try {
-      doc.addImage(heroImg, 'JPEG', 20, 106, pageWidth - 40, 58, undefined, 'FAST');
-      // Subtle border around image
+      doc.addImage(heroImg, 'JPEG', 20, advisorCardY, portraitW, portraitH, undefined, 'FAST');
       doc.setDrawColor(...COLORS.accent);
-      doc.setLineWidth(1);
-      doc.rect(20, 106, pageWidth - 40, 58);
+      doc.setLineWidth(0.8);
+      doc.rect(20, advisorCardY, portraitW, portraitH);
     } catch (e) {
       console.warn('Cover image render note:', e);
     }
   }
+
+  // Right Side: Advisor Credential Box
+  const credX = 20 + portraitW + 6; // 72mm
+  const credW = pageWidth - 20 - credX; // 118mm
+  doc.setFillColor(...COLORS.white);
+  doc.setDrawColor(...COLORS.border);
+  doc.setLineWidth(0.6);
+  doc.roundedRect(credX, advisorCardY, credW, portraitH, 3, 3, 'FD');
+
+  doc.setFillColor(...COLORS.primary);
+  doc.roundedRect(credX, advisorCardY, credW, 8.5, 3, 3, 'F');
+  doc.rect(credX, advisorCardY + 4, credW, 4.5, 'F');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(...COLORS.white);
+  doc.text('OFFICIAL WEALTH & INSURANCE ADVISOR', credX + 6, advisorCardY + 5.8);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(...COLORS.primary);
+  doc.text('Eswara Moorthy', credX + 6, advisorCardY + 18);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8.5);
+  doc.setTextColor(...COLORS.secondary);
+  doc.text('Senior Financial Consultant & Risk Architect', credX + 6, advisorCardY + 24);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(...COLORS.textMuted);
+  doc.text('• 25+ Years of Dedicated Life Insurance Expertise', credX + 6, advisorCardY + 32);
+  doc.text('• Specializing in Child Higher Education & Marriage Milestones', credX + 6, advisorCardY + 38);
+  doc.text('• Comprehensive Family Protection & Retirement Annuity Plans', credX + 6, advisorCardY + 44);
+  doc.text('• IRDAI Regulatory Compliance & Highest Claim Settlement Support', credX + 6, advisorCardY + 50);
 
   // Determine Primary Client Name
   let primaryName = 'Valued Client';
