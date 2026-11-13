@@ -9,12 +9,29 @@ export const formatIndianCurrency = (value) => {
   const num = Number(value);
   if (num === 0) return '₹ 0';
 
-  // Format using Indian locale
   const formatted = new Intl.NumberFormat('en-IN', {
     maximumFractionDigits: 0
   }).format(num);
 
   return `₹ ${formatted}`;
+};
+
+/**
+ * Format number into standard ASCII currency for reliable PDF font rendering (e.g. "Rs. 25,00,000")
+ */
+export const formatPdfCurrency = (value) => {
+  if (value === null || value === undefined || value === '' || isNaN(value)) {
+    return 'Rs. 0';
+  }
+
+  const num = Number(value);
+  if (num === 0) return 'Rs. 0';
+
+  const formatted = new Intl.NumberFormat('en-IN', {
+    maximumFractionDigits: 0
+  }).format(num);
+
+  return `Rs. ${formatted}`;
 };
 
 /**
