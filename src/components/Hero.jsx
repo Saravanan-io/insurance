@@ -116,17 +116,18 @@ export default function Hero({ onExploreClick, onGenerateClick, onLoadDemo }) {
             </div>
           </div>
 
-          {/* Right Column: Mr. Eswara Moorthy Portrait */}
-          <div className="lg:col-span-5 relative flex justify-center">
-            <div className="relative mx-auto max-w-sm sm:max-w-md w-full">
-              {/* Clean Executive Portrait Container */}
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 group">
-                <img
-                  src={base64Images.hero}
-                  alt="Eswara Moorthy – Senior Insurance Advisor"
-                  className="w-full h-[460px] sm:h-[520px] object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
-                />
-              </div>
+          {/* Right Column: Mr. Eswara Moorthy Transparent Cutout */}
+          <div className="lg:col-span-5 relative flex items-center justify-center pt-4 lg:pt-0">
+            {/* Soft Ambient Luxury Glow behind portrait */}
+            <div className="absolute w-72 sm:w-96 h-72 sm:h-96 rounded-full bg-gradient-to-tr from-brand-secondary/20 via-brand-accent/25 to-blue-300/20 blur-3xl -z-10 pointer-events-none" />
+            <div className="absolute w-64 h-64 rounded-full border border-brand-accent/20 -z-10 pointer-events-none" />
+
+            <div className="relative mx-auto max-w-sm sm:max-w-md w-full flex justify-center">
+              <img
+                src={base64Images.hero}
+                alt="Eswara Moorthy – Senior Insurance Advisor"
+                className="w-auto h-[440px] sm:h-[500px] object-contain drop-shadow-[0_20px_35px_rgba(20,43,82,0.18)] transition-transform duration-500 hover:scale-[1.02]"
+              />
             </div>
           </div>
         </div>

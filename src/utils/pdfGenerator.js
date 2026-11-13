@@ -155,10 +155,12 @@ const drawCoverPage = (doc, selectedPlansList, plansState, docId, totalPages) =>
 
   if (heroImg) {
     try {
-      doc.addImage(heroImg, 'JPEG', 20, advisorCardY, portraitW, portraitH, undefined, 'FAST');
+      doc.setFillColor(...COLORS.white);
+      doc.roundedRect(20, advisorCardY, portraitW, portraitH, 2, 2, 'F');
+      doc.addImage(heroImg, 'PNG', 20, advisorCardY, portraitW, portraitH, undefined, 'FAST');
       doc.setDrawColor(...COLORS.accent);
       doc.setLineWidth(0.8);
-      doc.rect(20, advisorCardY, portraitW, portraitH);
+      doc.roundedRect(20, advisorCardY, portraitW, portraitH, 2, 2, 'D');
     } catch (e) {
       console.warn('Cover image render note:', e);
     }
