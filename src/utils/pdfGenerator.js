@@ -289,127 +289,98 @@ const drawCoverPage = (doc, selectedPlansList, plansState, docId, totalPages) =>
 
 /**
  * Draw an Individual Plan Page (used in both single plan PDF and combined PDF pages)
+ * Layout: Feature Image + Name + Financial Value + Header & Footer
  */
 const drawPlanPage = (doc, featureMeta, formData, pageNumber, totalPages, docId) => {
   const pageWidth = doc.internal.pageSize.getWidth();
 
-  // Standard Header
+  // 1. Standard Header
   drawPageHeader(doc, featureMeta.reportTitle, docId);
 
-  // Top Section: Category Title
+  // 2. Top Section: Category Title
   const contentStartY = 33;
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(16);
   doc.setTextColor(...COLORS.primary);
   doc.text(featureMeta.reportTitle, 15, contentStartY);
 
-  // Two Column Layout Top Area:
-  // Left: Feature Image (Width: 85mm, Height: 58mm)
-  // Right: Key Personal Details Box (Width: 90mm, Height: 58mm)
-  const imageX = 15;
-  const imageY = contentStartY + 8;
-  const imageW = 85;
-  const imageH = 58;
+  // Subtle gold accent underline below title
+  doc.setFillColor(...COLORS.accent);
+  doc.rect(15, contentStartY + 3, 50, 1, 'F');
 
-  // Resolve Image based on feature and gender
+  // 3. Feature Image (Large, Prominent, High-Resolution Banner)
+  const imageX = 15;
+  const imageY = contentStartY + 10; // 43mm
+  const imageW = pageWidth - 30; // 180mm
+  const imageH = 100; // 100mm height
+
   const imgData = getFeatureImage(featureMeta.id, formData.gender);
   if (imgData) {
     try {
       doc.addImage(imgData, 'JPEG', imageX, imageY, imageW, imageH, undefined, 'FAST');
-      // Subtle gold frame
+      // Elegant gold frame border around image
       doc.setDrawColor(...COLORS.accent);
-      doc.setLineWidth(1);
+      doc.setLineWidth(0.8);
       doc.rect(imageX, imageY, imageW, imageH);
     } catch (e) {
       console.warn('Plan image render note:', e);
     }
   }
 
-  // Right Side: Personal Details Card
-  const detailsX = 105;
-  const detailsY = imageY;
-  const detailsW = pageWidth - 105 - 15; // 90mm
-  const detailsH = imageH;
+  // 4. Beneficiary / Client Name Card
+  const nameCardY = imageY + imageH + 10; // 153mm
+  const nameCardW = pageWidth - 30; // 180mm
+  const nameCardH = 34;
 
   doc.setFillColor(...COLORS.white);
   doc.setDrawColor(...COLORS.border);
   doc.setLineWidth(0.6);
-  doc.roundedRect(detailsX, detailsY, detailsW, detailsH, 2.5, 2.5, 'FD');
+  doc.roundedRect(15, nameCardY, nameCardW, nameCardH, 3, 3, 'FD');
 
-  // Details Header Tab
-  doc.setFillColor(...COLORS.primary);
-  doc.roundedRect(detailsX, detailsY, detailsW, 9, 2.5, 2.5, 'F');
-  doc.rect(detailsX, detailsY + 5, detailsW, 4, 'F');
+  // Gold accent left trim
+  doc.setFillColor(...COLORS.accent);
+  doc.roundedRect(15, nameCardY, 5, nameCardH, 2, 2, 'F');
+
+  // Format Client / Student Name
+  let nameLabel = 'CLIENT / BENEFICIARY NAME';
+  let displayName = 'Client';
+
+  if (featureMeta.id === 'marriage') {
+    nameLabel = 'BENEFICIARY FULL NAME';
+    displayName = `${formData.prefix ? formData.prefix + ' ' : ''}${formData.fullName || 'Client'}`.trim();
+  } else if (featureMeta.id === 'education') {
+    nameLabel = 'STUDENT FULL NAME';
+    displayName = `${formData.fullName || 'Student'} (${formData.gender || 'Male'} Student)`;
+  } else if (featureMeta.id === 'retirement') {
+    nameLabel = 'RETIREE FULL NAME';
+    displayName = `${formData.prefix ? formData.prefix + ' ' : ''}${formData.fullName || 'Client'}`.trim();
+  } else if (featureMeta.id === 'accidentalRisk') {
+    nameLabel = 'INSURED PERSON FULL NAME';
+    displayName = `${formData.prefix ? formData.prefix + ' ' : ''}${formData.fullName || 'Client'}`.trim();
+  } else if (featureMeta.id === 'lifeRisk') {
+    nameLabel = 'LIFE ASSURED FULL NAME';
+    displayName = `${formData.prefix ? formData.prefix + ' ' : ''}${formData.fullName || 'Client'}`.trim();
+  }
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8.5);
-  doc.setTextColor(...COLORS.white);
-  doc.text('CLIENT & PLAN PROFILE', detailsX + 6, detailsY + 6);
+  doc.setTextColor(...COLORS.textMuted);
+  doc.text(nameLabel, 26, nameCardY + 12);
 
-  // Clean, focused client details without the removed generic rows
-  let detailRows = [];
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.setTextColor(...COLORS.primary);
+  doc.text(displayName, 26, nameCardY + 24);
 
-  if (featureMeta.id === 'marriage') {
-    detailRows = [
-      { label: 'Beneficiary Name', value: `${formData.prefix || ''} ${formData.fullName || ''}`.trim() },
-      { label: 'Plan Category', value: 'Marriage Insurance Planning' },
-      { label: 'Proposal Status', value: 'Active Client Planning' },
-      { label: 'Date of Proposal', value: formatDate() }
-    ];
-  } else if (featureMeta.id === 'education') {
-    detailRows = [
-      { label: 'Student Full Name', value: formData.fullName || 'Student' },
-      { label: 'Student Gender', value: `${formData.gender || 'Male'} Student` },
-      { label: 'Plan Category', value: 'Education Insurance Planning' },
-      { label: 'Date of Proposal', value: formatDate() }
-    ];
-  } else if (featureMeta.id === 'retirement') {
-    detailRows = [
-      { label: 'Retiree Full Name', value: `${formData.prefix || ''} ${formData.fullName || ''}`.trim() },
-      { label: 'Plan Category', value: 'Retirement Insurance Planning' },
-      { label: 'Proposal Status', value: 'Active Client Planning' },
-      { label: 'Date of Proposal', value: formatDate() }
-    ];
-  } else if (featureMeta.id === 'accidentalRisk') {
-    detailRows = [
-      { label: 'Insured Person', value: `${formData.prefix || ''} ${formData.fullName || ''}`.trim() },
-      { label: 'Plan Category', value: 'Accidental Risk Protection' },
-      { label: 'Coverage Class', value: '24x7 Comprehensive Shield' },
-      { label: 'Date of Proposal', value: formatDate() }
-    ];
-  } else if (featureMeta.id === 'lifeRisk') {
-    detailRows = [
-      { label: 'Life Assured Name', value: `${formData.prefix || ''} ${formData.fullName || ''}`.trim() },
-      { label: 'Plan Category', value: 'Life Risk Protection' },
-      { label: 'Coverage Class', value: 'Pure Term Protection Cover' },
-      { label: 'Date of Proposal', value: formatDate() }
-    ];
-  }
-
-  let rowY = detailsY + 16;
-  detailRows.forEach((row) => {
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7.5);
-    doc.setTextColor(...COLORS.textMuted);
-    doc.text(row.label.toUpperCase(), detailsX + 6, rowY);
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(...COLORS.textDark);
-    doc.text(String(row.value).slice(0, 36), detailsX + 6, rowY + 4.5);
-
-    rowY += 10;
-  });
-
-  // Highlight Financial Value Banner
-  const valueCardY = imageY + imageH + 7; // ~107
+  // 5. Highlighted Financial Target Value Banner
+  const valueCardY = nameCardY + nameCardH + 10; // 197mm
   const valueCardW = pageWidth - 30; // 180mm
-  const valueCardH = 34;
+  const valueCardH = 46;
 
   doc.setFillColor(...COLORS.primary);
   doc.roundedRect(15, valueCardY, valueCardW, valueCardH, 3, 3, 'F');
 
-  // Gold side trim
+  // Gold accent left trim
   doc.setFillColor(...COLORS.accent);
   doc.roundedRect(15, valueCardY, 5, valueCardH, 2, 2, 'F');
 
@@ -427,89 +398,28 @@ const drawPlanPage = (doc, featureMeta, formData, pageNumber, totalPages, docId)
   const wordsVal = formatCurrencyInWords(numericVal);
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
+  doc.setFontSize(9.5);
   doc.setTextColor(...COLORS.accent);
-  doc.text(`RECOMMENDED FINANCIAL COMMITMENT: ${valueLabel}`, 26, valueCardY + 11);
+  doc.text(`PLANNED FINANCIAL VALUE: ${valueLabel}`, 26, valueCardY + 14);
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(19);
+  doc.setFontSize(24);
   doc.setTextColor(...COLORS.white);
-  doc.text(formattedVal, 26, valueCardY + 23);
+  doc.text(formattedVal, 26, valueCardY + 30);
+
+  if (wordsVal) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(215, 230, 255);
+    doc.text(wordsVal, 28 + doc.getTextWidth(formattedVal) + 5, valueCardY + 29.5);
+  }
 
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  doc.setTextColor(215, 230, 255);
-  doc.text(wordsVal, 28 + doc.getTextWidth(formattedVal) + 4, valueCardY + 22.5);
-
   doc.setFontSize(8);
   doc.setTextColor(180, 205, 240);
-  doc.text('Calculated based on actuarial compounding, inflation resilience, and goal maturity timelines.', 26, valueCardY + 30);
+  doc.text('Authorized in-browser planning record compiled for Eswara Moorthy Insurance client proposal.', 26, valueCardY + 39);
 
-  // Strategic Advisory & Planning Insight Section
-  const insightY = valueCardY + valueCardH + 8; // ~149
-  const insightH = 56;
-  doc.setFillColor(...COLORS.white);
-  doc.setDrawColor(...COLORS.border);
-  doc.roundedRect(15, insightY, valueCardW, insightH, 3, 3, 'FD');
-
-  doc.setFillColor(...COLORS.accentLight);
-  doc.roundedRect(15, insightY, valueCardW, 9, 3, 3, 'F');
-  doc.rect(15, insightY + 5, valueCardW, 4, 'F');
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(...COLORS.primary);
-  doc.text('STRATEGIC ADVISORY & PERSONALIZED PLANNING SUMMARY', 22, insightY + 6.5);
-
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(...COLORS.textDark);
-
-  // Clean ASCII currency in text to avoid font glyph errors
-  const clientName = formData.fullName || 'Valued Client';
-  const insightParagraph1 = `Dear ${clientName}, our dedicated insurance advisory team has prepared this strategic framework for your ${featureMeta.title}. Setting aside a targeted sum of ${formattedVal} ensures that your milestone aspirations are thoroughly insulated against macroeconomic fluctuations, rising lifestyle costs, and unanticipated contingencies.`;
-
-  const insightParagraph2 = `${featureMeta.planningInsight} Systematic allocation towards this goal facilitates structured capital preservation while delivering superior financial security under prevailing statutory guidelines.`;
-
-  const lines1 = doc.splitTextToSize(insightParagraph1, valueCardW - 14);
-  const lines2 = doc.splitTextToSize(insightParagraph2, valueCardW - 14);
-
-  doc.text(lines1, 22, insightY + 17);
-  doc.text(lines2, 22, insightY + 17 + (lines1.length * 4.4) + 3);
-
-  // Sign-off & Seal Block (Clean, spacious, without the removed recommendations box)
-  const signY = insightY + insightH + 20; // ~225
-
-  // Digital verification badge
-  doc.setFillColor(...COLORS.accentLight);
-  doc.setDrawColor(...COLORS.accent);
-  doc.setLineWidth(0.6);
-  doc.roundedRect(pageWidth - 75, signY - 14, 60, 7, 2, 2, 'FD');
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(7);
-  doc.setTextColor(...COLORS.accent);
-  doc.text('★ DIGITALLY CERTIFIED ★', pageWidth - 45, signY - 9.5, { align: 'center' });
-
-  // Signature titles
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8.5);
-  doc.setTextColor(...COLORS.primary);
-  doc.text('CLIENT ACKNOWLEDGEMENT', 22, signY);
-  doc.text('AUTHORIZED ADVISORY SEAL', pageWidth - 75, signY);
-
-  // Signature lines
-  doc.setDrawColor(...COLORS.border);
-  doc.setLineWidth(0.5);
-  doc.line(22, signY + 16, 80, signY + 16);
-  doc.line(pageWidth - 75, signY + 16, pageWidth - 15, signY + 16);
-
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7.5);
-  doc.setTextColor(...COLORS.textMuted);
-  doc.text('Signature of Proposed Client', 22, signY + 21);
-  doc.text('Eswara Moorthy Insurance Advisory', pageWidth - 75, signY + 21);
-
-  // Page Footer
+  // 6. Page Footer
   drawPageFooter(doc, pageNumber, totalPages);
 };
 
