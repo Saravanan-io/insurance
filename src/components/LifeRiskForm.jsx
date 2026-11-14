@@ -35,7 +35,7 @@ export default function LifeRiskForm({ data, onChange, errors = {} }) {
             </div>
             <input
               type="text"
-              placeholder="e.g. Saravanan Ramanathan"
+              placeholder="Enter life assured full name"
               value={data.fullName || ''}
               onChange={(e) => handleFieldChange('fullName', e.target.value)}
               className={`w-full h-10 pl-8 pr-3 bg-white border rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 transition ${

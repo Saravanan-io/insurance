@@ -192,7 +192,7 @@ export default function App() {
               <input
                 id="client-name-input"
                 type="text"
-                placeholder="Type client full name (e.g. Saravanan Ramanathan)..."
+                placeholder="Type client full name..."
                 value={commonName}
                 onChange={(e) => handleCommonNameChange(e.target.value)}
                 className="w-full h-10 pl-9 pr-8 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary/20 focus:border-brand-secondary focus:bg-white transition"

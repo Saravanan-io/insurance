@@ -35,7 +35,7 @@ export default function AccidentalRiskForm({ data, onChange, errors = {} }) {
             </div>
             <input
               type="text"
-              placeholder="e.g. Saravanan Ramanathan"
+              placeholder="Enter insured person's name"
               value={data.fullName || ''}
               onChange={(e) => handleFieldChange('fullName', e.target.value)}
               className={`w-full h-10 pl-8 pr-3 bg-white border rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 transition ${
