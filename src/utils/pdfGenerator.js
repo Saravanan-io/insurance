@@ -1,7 +1,7 @@
 import { jsPDF } from 'jspdf';
-import { formatPdfCurrency, formatCurrencyInWords, formatDate, generateDocumentId } from './formatters';
-import { companyDetails, insuranceFeaturesMeta } from '../data/insuranceData';
-import { getFeatureImage, base64Images } from '../assets/base64Images';
+import { formatPdfCurrency, formatCurrencyInWords, formatDate, generateDocumentId } from './formatters.js';
+import { companyDetails, insuranceFeaturesMeta } from '../data/insuranceData.js';
+import { getFeatureImage, base64Images } from '../assets/base64Images.js';
 
 // Color palette constants for jsPDF
 const COLORS = {
@@ -31,27 +31,37 @@ const drawPageHeader = (doc, pageTitle, docId) => {
   doc.setFillColor(...COLORS.accent);
   doc.rect(0, 24, pageWidth, 1.5, 'F');
 
+  // Top-Left Logo (Home page advisor image framed as logo)
+  const advLogo = base64Images.advisor_logo || base64Images.hero;
+  if (advLogo) {
+    try {
+      doc.addImage(advLogo, 'PNG', 14, 3, 18, 18, undefined, 'FAST');
+    } catch (e) {
+      console.warn('Advisor logo render note:', e);
+    }
+  }
+
+  // Top-Right Logo (Uploaded LIC circular logo)
+  const licLogo = base64Images.lic_logo;
+  if (licLogo) {
+    try {
+      doc.addImage(licLogo, 'PNG', pageWidth - 14 - 18, 3, 18, 18, undefined, 'FAST');
+    } catch (e) {
+      console.warn('LIC logo render note:', e);
+    }
+  }
+
   // Company Brand Name
   doc.setTextColor(...COLORS.white);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(13);
-  doc.text('ESWARA MOORTHY INSURANCE', 15, 12);
+  doc.text('ESWARA MOORTHY INSURANCE', 36, 14);
 
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(210, 225, 250);
-  doc.text('SMART FINANCIAL PLANNING & RISK ARCHITECTURE', 15, 18);
-
-  // Right-aligned report category & doc ID
+  // Right-aligned report category (placed cleanly left of LIC logo)
   doc.setTextColor(...COLORS.accent);
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.text(pageTitle.toUpperCase(), pageWidth - 15, 12, { align: 'right' });
-
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7.5);
-  doc.setTextColor(210, 225, 250);
-  doc.text(`REF: ${docId}`, pageWidth - 15, 18, { align: 'right' });
+  doc.setFontSize(9.5);
+  doc.text(pageTitle.toUpperCase(), pageWidth - 36, 14, { align: 'right' });
 };
 
 /**
@@ -72,23 +82,9 @@ const drawPageFooter = (doc, currentPage, totalPages) => {
   doc.setFontSize(7.5);
   doc.setTextColor(...COLORS.textMuted);
   doc.text(
-    `${companyDetails.name} • ${companyDetails.registration} • Advisory Helpline: ${companyDetails.tollFree}`,
-    15,
-    footerY + 4
-  );
-
-  doc.text(
     `Page ${currentPage} of ${totalPages}`,
-    pageWidth - 15,
-    footerY + 4,
-    { align: 'right' }
-  );
-
-  doc.setFontSize(6.5);
-  doc.text(
-    'CONFIDENTIAL CLIENT PROPOSAL • GENERATED IN-BROWSER VIA SECURE CLIENT-SIDE PROCESSING',
     pageWidth / 2,
-    footerY + 9,
+    footerY + 4,
     { align: 'center' }
   );
 };
@@ -111,6 +107,16 @@ const drawCoverPage = (doc, selectedPlansList, plansState, docId, totalPages) =>
   // Gold accent line
   doc.setFillColor(...COLORS.accent);
   doc.rect(0, 58, pageWidth, 2.5, 'F');
+
+  // Top-Right LIC Logo on Cover Banner
+  const licLogo = base64Images.lic_logo;
+  if (licLogo) {
+    try {
+      doc.addImage(licLogo, 'PNG', pageWidth - 20 - 32, 13, 32, 32, undefined, 'FAST');
+    } catch (e) {
+      console.warn('Cover LIC logo note:', e);
+    }
+  }
 
   // Brand Name
   doc.setTextColor(...COLORS.white);
@@ -456,11 +462,6 @@ const drawPlanPage = (doc, featureMeta, formData, pageNumber, totalPages, docId)
     doc.text(wordsVal, 26, valueCardY + 36);
   }
 
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7.5);
-  doc.setTextColor(180, 205, 240);
-  doc.text('Calculated client proposal record • Eswara Moorthy Insurance Advisory', pageWidth - 26, valueCardY + 36, { align: 'right' });
-
   // 6. Page Footer
   drawPageFooter(doc, pageNumber, totalPages);
 };
@@ -491,11 +492,286 @@ export const generateIndividualPlanPDF = async (planKey, formData) => {
   const fileName = `${planName}_${sanitizedName}.pdf`;
 
   doc.save(fileName);
-  return { success: true, fileName };
+  return { success: true, fileName, pageCount: 1 };
 };
 
 /**
- * OPTION B: Generate Combined Insurance Portfolio PDF
+ * Draw All Selected Plans (including all 5) within a Single A4 Page Portfolio
+ */
+const drawSinglePagePortfolio = (doc, selectedPlansList, plansState, docId) => {
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+  // Subtle background tint
+  doc.setFillColor(...COLORS.bgLight);
+  doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+  // 1. Top Header Banner (22mm height)
+  doc.setFillColor(...COLORS.primary);
+  doc.rect(0, 0, pageWidth, 22, 'F');
+
+  doc.setFillColor(...COLORS.accent);
+  doc.rect(0, 22, pageWidth, 1.5, 'F');
+
+  // Top-Left Logo (Home page advisor image framed as logo)
+  const advLogo = base64Images.advisor_logo || base64Images.hero;
+  if (advLogo) {
+    try {
+      doc.addImage(advLogo, 'PNG', 14, 2, 18, 18, undefined, 'FAST');
+    } catch (e) {
+      console.warn('Advisor logo render note:', e);
+    }
+  }
+
+  // Top-Right Logo (Uploaded LIC circular logo)
+  const licLogo = base64Images.lic_logo;
+  if (licLogo) {
+    try {
+      doc.addImage(licLogo, 'PNG', pageWidth - 14 - 18, 2, 18, 18, undefined, 'FAST');
+    } catch (e) {
+      console.warn('LIC logo render note:', e);
+    }
+  }
+
+  // Brand Name
+  doc.setTextColor(...COLORS.white);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.text('ESWARA MOORTHY INSURANCE', 36, 13);
+
+  // Document title (placed cleanly to the left of the LIC logo)
+  doc.setTextColor(...COLORS.accent);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.text('COMPLETE INSURANCE PORTFOLIO', pageWidth - 36, 13, { align: 'right' });
+
+  // Determine Primary Client Name
+  let primaryClientName = 'Valued Client';
+  for (const plan of selectedPlansList) {
+    const data = plansState[plan.id];
+    if (data?.fullName) {
+      primaryClientName = `${data.prefix ? data.prefix + ' ' : ''}${data.fullName.trim()}`;
+      break;
+    }
+  }
+
+  // 2. Client & Advisor Card (Y: 25 to 49 mm, H: 24 mm)
+  doc.setFillColor(...COLORS.white);
+  doc.setDrawColor(...COLORS.border);
+  doc.setLineWidth(0.6);
+  doc.roundedRect(14, 25, 182, 24, 2.5, 2.5, 'FD');
+
+  // Gold accent left trim
+  doc.setFillColor(...COLORS.accent);
+  doc.roundedRect(14, 25, 3.5, 24, 1.5, 1.5, 'F');
+
+  // Left Section: Client Information
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7);
+  doc.setTextColor(...COLORS.textMuted);
+  doc.text('PORTFOLIO PREPARED EXCLUSIVELY FOR:', 21, 31.5);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11.5);
+  doc.setTextColor(...COLORS.primary);
+  doc.text(primaryClientName, 21, 38.5);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7);
+  doc.setTextColor(...COLORS.textMuted);
+  doc.text(`Date of Issue: ${formatDate()}  •  Comprehensive Multi-Milestone Financial Security`, 21, 44.5);
+
+  // Vertical Divider
+  doc.setDrawColor(...COLORS.border);
+  doc.setLineWidth(0.5);
+  doc.line(120, 27, 120, 47);
+
+  // Right Section: Advisor Information
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7);
+  doc.setTextColor(...COLORS.textMuted);
+  doc.text('OFFICIAL WEALTH & INSURANCE ADVISOR:', 125, 31.5);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(...COLORS.secondary);
+  doc.text('Eswara Moorthy', 125, 38.5);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7);
+  doc.setTextColor(...COLORS.textMuted);
+  doc.text('Senior Financial Consultant  •  25+ Years Experience', 125, 44.5);
+
+  // 3. Section Title Bar (Y: 51.5 to 56.5 mm)
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8.5);
+  doc.setTextColor(...COLORS.primary);
+  doc.text('SELECTED INSURANCE PLANS & MILESTONE BLUEPRINT', 14, 55);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7.5);
+  doc.setTextColor(...COLORS.accent);
+  doc.text(
+    `${selectedPlansList.length} OF 5 CATEGORIES ACTIVE • ALL DETAILS COMPILED`,
+    pageWidth - 14,
+    55,
+    { align: 'right' }
+  );
+
+  // 4. Feature Cards
+  const numPlans = selectedPlansList.length;
+  let cardH = 39;
+  let gap = 3.5;
+
+  if (numPlans === 5) {
+    cardH = 39;
+    gap = 3.5;
+  } else if (numPlans === 4) {
+    cardH = 44;
+    gap = 5.0;
+  } else if (numPlans === 3) {
+    cardH = 50;
+    gap = 7.0;
+  } else if (numPlans === 2) {
+    cardH = 56;
+    gap = 10.0;
+  } else if (numPlans === 1) {
+    cardH = 68;
+    gap = 0;
+  }
+
+  selectedPlansList.forEach((planMeta, idx) => {
+    const cardY = 58 + idx * (cardH + gap);
+    const planData = plansState[planMeta.id] || {};
+
+    let val = 0;
+    let personName = 'Client';
+    let roleLabel = 'BENEFICIARY';
+    let statLabel = planMeta.statLabel.toUpperCase();
+
+    if (planMeta.id === 'marriage') {
+      val = Number(planData.marriageValue) || 0;
+      personName = `${planData.prefix ? planData.prefix + ' ' : ''}${planData.fullName || 'Client'}`.trim();
+      roleLabel = 'BENEFICIARY';
+    } else if (planMeta.id === 'education') {
+      val = Number(planData.educationValue) || 0;
+      const gender = planData.gender || 'Male';
+      personName = `${planData.fullName || 'Student'} (${gender} Student)`;
+      roleLabel = 'STUDENT BENEFICIARY';
+    } else if (planMeta.id === 'retirement') {
+      val = Number(planData.retirementValue) || 0;
+      personName = `${planData.prefix ? planData.prefix + ' ' : ''}${planData.fullName || 'Client'}`.trim();
+      roleLabel = 'RETIREE / CLIENT';
+    } else if (planMeta.id === 'accidentalRisk') {
+      val = Number(planData.coverageValue) || 0;
+      personName = `${planData.prefix ? planData.prefix + ' ' : ''}${planData.fullName || 'Client'}`.trim();
+      roleLabel = 'INSURED PERSON';
+    } else if (planMeta.id === 'lifeRisk') {
+      val = Number(planData.coverageValue) || 0;
+      personName = `${planData.prefix ? planData.prefix + ' ' : ''}${planData.fullName || 'Client'}`.trim();
+      roleLabel = 'LIFE ASSURED';
+    }
+
+    // Card Container (Width: 182mm, from X=14 to X=196)
+    doc.setFillColor(...COLORS.white);
+    doc.setDrawColor(...COLORS.border);
+    doc.setLineWidth(0.5);
+    doc.roundedRect(14, cardY, 182, cardH, 2.5, 2.5, 'FD');
+
+    // Left accent strip
+    doc.setFillColor(...COLORS.accent);
+    doc.roundedRect(14, cardY, 3.5, cardH, 1.5, 1.5, 'F');
+
+    // Feature Image Thumbnail (Fixed 42mm width across all counts)
+    const imgX = 18;
+    const imgY = cardY + 3;
+    const imgW = 42;
+    const imgH = cardH - 6;
+    const imgData = getFeatureImage(planMeta.id, planData.gender);
+
+    if (imgData) {
+      try {
+        doc.addImage(imgData, 'JPEG', imgX, imgY, imgW, imgH, undefined, 'FAST');
+        doc.setDrawColor(...COLORS.border);
+        doc.setLineWidth(0.4);
+        doc.rect(imgX, imgY, imgW, imgH);
+      } catch (e) {
+        console.warn('Feature thumbnail render note:', e);
+      }
+    }
+
+    // Right Column: Financial Target Value Box (Fixed from X=142 to X=193.5, W=51.5mm)
+    const boxX = 142;
+    const boxY = cardY + 3;
+    const boxW = 51.5;
+    const boxH = cardH - 6;
+
+    doc.setFillColor(...COLORS.bgLight);
+    doc.setDrawColor(...COLORS.border);
+    doc.setLineWidth(0.5);
+    doc.roundedRect(boxX, boxY, boxW, boxH, 2, 2, 'FD');
+
+    // Box Label
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(6.5);
+    doc.setTextColor(...COLORS.textMuted);
+    doc.text(statLabel, boxX + 4, boxY + (boxH >= 40 ? 8 : 6.5));
+
+    // Box Amount (Numbers)
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(boxH >= 40 ? 13 : 11.5);
+    doc.setTextColor(...COLORS.primary);
+    doc.text(formatPdfCurrency(val), boxX + 4, boxY + (boxH >= 40 ? 18 : 14.5));
+
+    // Box Amount (Words)
+    const words = formatCurrencyInWords(val);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(6.5);
+    doc.setTextColor(...COLORS.accent);
+    doc.text(words, boxX + 4, boxY + (boxH >= 40 ? 26 : 21), { maxWidth: boxW - 8 });
+
+    // Middle Column: Text Details (Wide 74mm clearance, from X=65 to X=139)
+    const midX = imgX + imgW + 5; // 65mm
+    const midW = boxX - midX - 3; // 74mm of dedicated space
+
+    // Line 1: Plan Title
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(cardH >= 50 ? 10.5 : 9.5);
+    doc.setTextColor(...COLORS.primary);
+    doc.text(`${idx + 1}. ${planMeta.title}`, midX, cardY + (cardH >= 50 ? 9.5 : 8), { maxWidth: midW });
+
+    // Line 2: Tagline
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(cardH >= 50 ? 7.5 : 7);
+    doc.setTextColor(...COLORS.textMuted);
+    doc.text(planMeta.tagline, midX, cardY + (cardH >= 50 ? 16.5 : 13.5), { maxWidth: midW });
+
+    // Line 3: Beneficiary Role Label
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(6.5);
+    doc.setTextColor(...COLORS.secondary);
+    doc.text(roleLabel, midX, cardY + (cardH >= 50 ? 24.5 : 20.5), { maxWidth: midW });
+
+    // Line 4: Beneficiary Full Name
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(cardH >= 50 ? 10.5 : 9.5);
+    doc.setTextColor(...COLORS.textDark);
+    doc.text(personName, midX, cardY + (cardH >= 50 ? 32.5 : 27), { maxWidth: midW });
+
+    if (cardH >= 50) {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.setTextColor(...COLORS.textMuted);
+      doc.text(planMeta.description.slice(0, 52) + '...', midX, cardY + 39.5, { maxWidth: midW });
+    }
+  });
+
+  // 5. Footer (Page 1 of 1)
+  drawPageFooter(doc, 1, 1);
+};
+
+/**
+ * OPTION B: Generate Combined Insurance Portfolio PDF (Single-Page Portfolio)
  */
 export const generateCombinedPortfolioPDF = async (selectedPlansKeys, plansState) => {
   if (!selectedPlansKeys || selectedPlansKeys.length === 0) {
@@ -514,18 +790,10 @@ export const generateCombinedPortfolioPDF = async (selectedPlansKeys, plansState
   });
 
   const docId = generateDocumentId('PORTFOLIO');
-  const totalPages = 1 + selectedMetas.length;
+  const totalPages = 1;
 
-  // Page 1: Premium Cover Page
-  drawCoverPage(doc, selectedMetas, plansState, docId, totalPages);
-
-  // Following Pages: One page per selected category
-  selectedMetas.forEach((meta, index) => {
-    doc.addPage();
-    const pageNum = index + 2;
-    const planData = plansState[meta.id];
-    drawPlanPage(doc, meta, planData, pageNum, totalPages, docId);
-  });
+  // Render all selected feature details (including all 5) within a single page
+  drawSinglePagePortfolio(doc, selectedMetas, plansState, docId);
 
   const fileName = 'Eswara_Moorthy_Insurance_Portfolio.pdf';
   doc.save(fileName);

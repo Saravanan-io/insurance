@@ -1,20 +1,20 @@
 export const initialPlansState = {
   marriage: {
-    selected: true,
+    selected: false,
     prefix: 'Mr.',
     fullName: '',
     marriageValue: '',
     errors: {}
   },
   education: {
-    selected: true,
+    selected: false,
     fullName: '',
     gender: 'Male',
     educationValue: '',
     errors: {}
   },
   retirement: {
-    selected: true,
+    selected: false,
     prefix: 'Mr.',
     fullName: '',
     retirementValue: '',

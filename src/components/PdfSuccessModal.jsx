@@ -49,7 +49,7 @@ export default function PdfSuccessModal({ downloadInfo, onClose }) {
             </div>
             {downloadInfo.pageCount && (
               <div className="text-[10px] text-brand-secondary font-medium">
-                {downloadInfo.pageCount} Pages • High Resolution A4 Portrait
+                {downloadInfo.pageCount} {downloadInfo.pageCount === 1 ? 'Page' : 'Pages'} • High Resolution A4 Portrait
               </div>
             )}
           </div>
